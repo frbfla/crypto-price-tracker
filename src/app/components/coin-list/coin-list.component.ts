@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -12,7 +12,7 @@ import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
   templateUrl: './coin-list.component.html',
   styleUrl: './coin-list.component.scss'
 })
-export class CoinListComponent implements OnInit {
+export class CoinListComponent implements OnInit, OnDestroy {
   coins: any[] = [];
   filteredCoins: any[] = [];
   trendingCoins: any[] = [];
@@ -20,7 +20,8 @@ export class CoinListComponent implements OnInit {
   error: string | null = null;
   searchTerm: string = '';
   searchTerms = new Subject<string>();
-  
+  private updateInterval: any;
+
   // Filtros
   sortBy: string = 'market_cap_desc';
   priceChangeFilter: string = 'all'; // all, positive, negative
@@ -30,7 +31,7 @@ export class CoinListComponent implements OnInit {
   ngOnInit(): void {
     this.loadCoins();
     this.loadTrendingCoins();
-    
+
     // Configurar busca com debounce
     this.searchTerms.pipe(
       debounceTime(300),
@@ -39,6 +40,19 @@ export class CoinListComponent implements OnInit {
       this.searchTerm = term;
       this.applyFilters();
     });
+
+    // Configurar atualização automática a cada 30 segundos
+    this.updateInterval = setInterval(() => {
+      this.refreshData();
+      console.log('Atualizando valores')
+    }, 30000); // 30 segundos
+  }
+
+  ngOnDestroy(): void {
+    // Limpar o interval quando o componente for destruído
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+    }
   }
 
   loadCoins(): void {
@@ -67,25 +81,25 @@ export class CoinListComponent implements OnInit {
       }
     });
   }
-  
+
   // Método para busca
   search(term: string): void {
     this.searchTerms.next(term);
   }
-  
+
   // Aplicar todos os filtros
   applyFilters(): void {
     // Primeiro filtra por termo de busca
     let result = this.coins;
-    
+
     if (this.searchTerm) {
       const searchTermLower = this.searchTerm.toLowerCase();
-      result = result.filter(coin => 
-        coin.name.toLowerCase().includes(searchTermLower) || 
+      result = result.filter(coin =>
+        coin.name.toLowerCase().includes(searchTermLower) ||
         coin.symbol.toLowerCase().includes(searchTermLower)
       );
     }
-    
+
     // Depois filtra por variação de preço
     if (this.priceChangeFilter !== 'all') {
       result = result.filter(coin => {
@@ -97,13 +111,13 @@ export class CoinListComponent implements OnInit {
         }
       });
     }
-    
+
     // Por fim, ordena
     result = this.sortCoins(result, this.sortBy);
-    
+
     this.filteredCoins = result;
   }
-  
+
   // Ordenar moedas
   sortCoins(coins: any[], sortBy: string): any[] {
     return [...coins].sort((a, b) => {
@@ -129,13 +143,13 @@ export class CoinListComponent implements OnInit {
       }
     });
   }
-  
+
   // Atualizar ordenação
   updateSort(sortBy: string): void {
     this.sortBy = sortBy;
     this.applyFilters();
   }
-  
+
   // Atualizar filtro de variação de preço
   updatePriceChangeFilter(filter: string): void {
     this.priceChangeFilter = filter;
@@ -163,5 +177,27 @@ export class CoinListComponent implements OnInit {
 
   getColorClass(priceChange: number): string {
     return priceChange >= 0 ? 'positive-change' : 'negative-change';
+  }
+
+  // Método para atualizar dados sem mostrar loading
+  refreshData(): void {
+    this.cryptoService.getCoins().subscribe({
+      next: (data) => {
+        this.coins = data;
+        this.applyFilters(); // Reaplicar filtros com os novos dados
+      },
+      error: (err) => {
+        console.error('Erro ao atualizar dados de criptomoedas:', err);
+      }
+    });
+
+    this.cryptoService.getTrendingCoins().subscribe({
+      next: (data) => {
+        this.trendingCoins = data.coins.slice(0, 5);
+      },
+      error: (err) => {
+        console.error('Erro ao atualizar criptomoedas em tendência:', err);
+      }
+    });
   }
 }

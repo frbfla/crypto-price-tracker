@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 .coin-detail-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -47,7 +49,7 @@
       transition: background-color 0.3s ease;
 
       &:hover {
-        background-color: darken(#11cdef, 10%);
+        background-color: color.adjust(#11cdef, $lightness: -10%);
       }
     }
   }

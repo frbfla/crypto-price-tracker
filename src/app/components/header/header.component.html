@@ -9,7 +9,7 @@
     <nav class="navigation">
       <ul>
         <li><a routerLink="/coin-list" routerLinkActive="active">Criptomoedas</a></li>
-        <ng-container *ngIf="isLoggedIn; else loggedIn">
+        <ng-container *ngIf="!isLoggedIn; else loggedIn">
           <li><a routerLink="/login" routerLinkActive="active">Login</a></li>
         </ng-container>
         <ng-template #loggedIn>

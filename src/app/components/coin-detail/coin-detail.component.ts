@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CryptoService } from '../../services/crypto.service';
@@ -10,7 +10,7 @@ import { CryptoService } from '../../services/crypto.service';
   templateUrl: './coin-detail.component.html',
   styleUrl: './coin-detail.component.scss'
 })
-export class CoinDetailComponent implements OnInit {
+export class CoinDetailComponent implements OnInit, OnDestroy {
   coinId: string = '';
   coin: any = null;
   loading: boolean = true;
@@ -18,6 +18,7 @@ export class CoinDetailComponent implements OnInit {
   chartData: any[] = [];
   chartOptions: any = {};
   timeframe: string = '7d'; // Default timeframe
+  private updateInterval: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -30,7 +31,19 @@ export class CoinDetailComponent implements OnInit {
       this.coinId = params['id'];
       this.loadCoinDetails();
       this.loadCoinHistory();
+      
+      // Configurar atualização automática a cada 30 segundos
+      this.updateInterval = setInterval(() => {
+        this.refreshData();
+      }, 30000); // 30 segundos
     });
+  }
+
+  ngOnDestroy(): void {
+    // Limpar o interval quando o componente for destruído
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+    }
   }
 
   loadCoinDetails(): void {
@@ -114,5 +127,36 @@ export class CoinDetailComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/coin-list']);
+  }
+
+  // Método para atualizar dados sem mostrar loading
+  refreshData(): void {
+    this.cryptoService.getCoinDetails(this.coinId).subscribe({
+      next: (data) => {
+        this.coin = data;
+      },
+      error: (error) => {
+        console.error('Erro ao atualizar detalhes da criptomoeda:', error);
+      }
+    });
+
+    this.cryptoService.getCoinHistory(this.coinId, this.getTimeframeDays()).subscribe({
+      next: (data) => {
+        this.chartData = this.processChartData(data.prices);
+        this.setupChartOptions();
+      },
+      error: (error) => {
+        console.error('Erro ao atualizar histórico da criptomoeda:', error);
+      }
+    });
+  }
+
+  private getTimeframeDays(): number {
+    switch (this.timeframe) {
+      case '24h': return 1;
+      case '30d': return 30;
+      case '1y': return 365;
+      default: return 7;
+    }
   }
 }
