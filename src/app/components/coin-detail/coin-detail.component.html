@@ -1,0 +1,124 @@
+<div class="coin-detail-container">
+  <!-- Loading state -->
+  <div class="loading-container" *ngIf="loading">
+    <div class="loader"></div>
+    <p>Carregando detalhes da criptomoeda...</p>
+  </div>
+
+  <!-- Error state -->
+  <div class="error-container" *ngIf="error && !loading">
+    <p>{{ error }}</p>
+    <button (click)="loadCoinDetails()">Tentar novamente</button>
+  </div>
+
+  <!-- Coin details -->
+  <div class="coin-details" *ngIf="coin && !loading && !error">
+    <!-- Back button -->
+    <button class="back-button" (click)="goBack()">
+      <span>←</span> Voltar para lista
+    </button>
+
+    <!-- Coin header -->
+    <div class="coin-header">
+      <div class="coin-basic-info">
+        <img [src]="coin.image?.large" [alt]="coin.name" class="coin-logo">
+        <div class="coin-name-info">
+          <h1>{{ coin.name }} <span class="coin-symbol">({{ coin.symbol?.toUpperCase() }})</span></h1>
+          <div class="coin-rank">
+            <span class="rank-label">Rank #{{ coin.market_cap_rank }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="coin-price-info">
+        <div class="current-price">
+          <h2>{{ formatPrice(coin.market_data?.current_price?.brl) }}</h2>
+          <span [ngClass]="getColorClass(coin.market_data?.price_change_percentage_24h)">
+            {{ coin.market_data?.price_change_percentage_24h?.toFixed(2) }}% (24h)
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Price chart section -->
+    <div class="chart-section">
+      <div class="chart-header">
+        <h3>Histórico de preços</h3>
+        <div class="timeframe-selector">
+          <button [ngClass]="{'active': timeframe === '24h'}" (click)="changeTimeframe('24h')">24h</button>
+          <button [ngClass]="{'active': timeframe === '7d'}" (click)="changeTimeframe('7d')">7d</button>
+          <button [ngClass]="{'active': timeframe === '30d'}" (click)="changeTimeframe('30d')">30d</button>
+          <button [ngClass]="{'active': timeframe === '1y'}" (click)="changeTimeframe('1y')">1 ano</button>
+        </div>
+      </div>
+      <div class="chart-container">
+        <!-- Chart would be rendered here with a chart library -->
+        <div class="chart-placeholder">
+          <p>Gráfico de preços para {{ coin.name }} ({{ timeframe }})</p>
+          <div class="placeholder-chart">
+            <div class="chart-line" [ngStyle]="{'--chart-color': coin.market_data?.price_change_percentage_24h >= 0 ? 'var(--success-color)' : 'var(--danger-color)'}"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Market data section -->
+    <div class="market-data-section">
+      <h3>Dados de mercado</h3>
+      <div class="market-data-grid">
+        <div class="market-data-item">
+          <span class="data-label">Market Cap</span>
+          <span class="data-value">{{ formatPrice(coin.market_data?.market_cap?.brl) }}</span>
+        </div>
+        <div class="market-data-item">
+          <span class="data-label">Volume (24h)</span>
+          <span class="data-value">{{ formatPrice(coin.market_data?.total_volume?.brl) }}</span>
+        </div>
+        <div class="market-data-item">
+          <span class="data-label">Circulação</span>
+          <span class="data-value">{{ coin.market_data?.circulating_supply?.toLocaleString() }} {{ coin.symbol?.toUpperCase() }}</span>
+        </div>
+        <div class="market-data-item">
+          <span class="data-label">Fornecimento máximo</span>
+          <span class="data-value">{{ coin.market_data?.max_supply ? coin.market_data?.max_supply?.toLocaleString() + ' ' + coin.symbol?.toUpperCase() : 'Ilimitado' }}</span>
+        </div>
+        <div class="market-data-item">
+          <span class="data-label">Alta (24h)</span>
+          <span class="data-value positive-change">{{ formatPrice(coin.market_data?.high_24h?.brl) }}</span>
+        </div>
+        <div class="market-data-item">
+          <span class="data-label">Baixa (24h)</span>
+          <span class="data-value negative-change">{{ formatPrice(coin.market_data?.low_24h?.brl) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Description section -->
+    <div class="description-section" *ngIf="coin.description?.pt || coin.description?.en">
+      <h3>Sobre {{ coin.name }}</h3>
+      <div class="description-content" [innerHTML]="coin.description?.pt || coin.description?.en"></div>
+    </div>
+
+    <!-- Links section -->
+    <div class="links-section" *ngIf="coin.links">
+      <h3>Links</h3>
+      <div class="links-grid">
+        <a *ngIf="coin.links?.homepage && coin.links?.homepage[0]" [href]="coin.links?.homepage[0]" target="_blank" class="link-item">
+          <span class="link-icon">🌐</span>
+          <span class="link-text">Site oficial</span>
+        </a>
+        <a *ngIf="coin.links?.blockchain_site && coin.links?.blockchain_site[0]" [href]="coin.links?.blockchain_site[0]" target="_blank" class="link-item">
+          <span class="link-icon">🔗</span>
+          <span class="link-text">Blockchain Explorer</span>
+        </a>
+        <a *ngIf="coin.links?.subreddit_url" [href]="coin.links?.subreddit_url" target="_blank" class="link-item">
+          <span class="link-icon">💬</span>
+          <span class="link-text">Reddit</span>
+        </a>
+        <a *ngIf="coin.links?.repos_url?.github && coin.links?.repos_url?.github[0]" [href]="coin.links?.repos_url?.github[0]" target="_blank" class="link-item">
+          <span class="link-icon">📦</span>
+          <span class="link-text">GitHub</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

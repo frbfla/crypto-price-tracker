@@ -1,0 +1,128 @@
+<div class="coin-list-container">
+  <!-- Banner com criptomoedas em tendência -->
+  <section class="trending-banner">
+    <div class="banner-content">
+      <div class="title-with-image">
+        <div class="title-content">
+          <h1>Acompanhe os preços das criptomoedas em tempo real</h1>
+          <p>Dados atualizados das principais criptomoedas do mercado</p>
+        </div>
+        <div class="banner-image">
+          <img src="assets/images/crypto-banner.svg" alt="Crypto Banner">
+        </div>
+      </div>
+      
+      <div class="trending-coins" *ngIf="trendingCoins.length > 0">
+        <h3>Em tendência</h3>
+        <div class="trending-list">
+          <div class="trending-item" *ngFor="let coin of trendingCoins">
+            <img [src]="coin.item.small" [alt]="coin.item.name">
+            <div class="trending-info">
+              <span class="name">{{ coin.item.name }}</span>
+              <span class="symbol">{{ coin.item.symbol }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lista de criptomoedas -->
+  <section class="coins-section">
+    <div class="section-header">
+      <h2>Criptomoedas</h2>
+      <div class="filters-container">
+        <div class="search-box">
+          <input 
+            type="text" 
+            placeholder="Buscar criptomoeda..."
+            [ngModel]="searchTerm"
+            (ngModelChange)="search($event)"
+          >
+        </div>
+        
+        <div class="filter-options">
+          <div class="filter-group">
+            <label>Ordenar por:</label>
+            <select [(ngModel)]="sortBy" (change)="applyFilters()">
+              <option value="market_cap_desc">Cap. de Mercado (maior)</option>
+              <option value="market_cap_asc">Cap. de Mercado (menor)</option>
+              <option value="price_desc">Preço (maior)</option>
+              <option value="price_asc">Preço (menor)</option>
+              <option value="name_asc">Nome (A-Z)</option>
+              <option value="name_desc">Nome (Z-A)</option>
+              <option value="change_desc">Variação 24h (maior)</option>
+              <option value="change_asc">Variação 24h (menor)</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label>Variação de preço:</label>
+            <div class="price-change-filter">
+              <button 
+                [class.active]="priceChangeFilter === 'all'"
+                (click)="updatePriceChangeFilter('all')"
+              >Todos</button>
+              <button 
+                [class.active]="priceChangeFilter === 'positive'"
+                (click)="updatePriceChangeFilter('positive')"
+              >Positivos</button>
+              <button 
+                [class.active]="priceChangeFilter === 'negative'"
+                (click)="updatePriceChangeFilter('negative')"
+              >Negativos</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading state -->
+    <div class="loading-container" *ngIf="loading">
+      <div class="loader"></div>
+      <p>Carregando dados...</p>
+    </div>
+
+    <!-- Error state -->
+    <div class="error-container" *ngIf="error">
+      <p>{{ error }}</p>
+      <button (click)="loadCoins()">Tentar novamente</button>
+    </div>
+
+    <!-- Coin list -->
+    <div class="coin-table-container" *ngIf="!loading && !error">
+      <table class="coin-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Moeda</th>
+            <th>Preço</th>
+            <th>24h %</th>
+            <th>Cap. de Mercado</th>
+            <th>Volume (24h)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let coin of filteredCoins" [routerLink]="['/coin-detail', coin.id]">
+            <td>{{ coin.market_cap_rank }}</td>
+            <td>
+              <div class="coin-info">
+                <img [src]="coin.image" [alt]="coin.name">
+                <div>
+                  <span class="coin-name">{{ coin.name }}</span>
+                  <span class="coin-symbol">{{ coin.symbol.toUpperCase() }}</span>
+                </div>
+              </div>
+            </td>
+            <td>{{ formatPrice(coin.current_price) }}</td>
+            <td [ngClass]="getColorClass(coin.price_change_percentage_24h)">
+              {{ coin.price_change_percentage_24h?.toFixed(2) }}%
+            </td>
+            <td>{{ formatMarketCap(coin.market_cap) }}</td>
+            <td>{{ formatMarketCap(coin.total_volume) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

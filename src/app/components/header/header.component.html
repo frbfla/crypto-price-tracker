@@ -1,0 +1,25 @@
+<header class="header">
+  <div class="header-container">
+    <div class="logo">
+      <a routerLink="/">
+        <img src="assets/images/crypto-logo.svg" alt="Cripto Portfolio Logo">
+        <span>Cripto Portfolio</span>
+      </a>
+    </div>
+    <nav class="navigation">
+      <ul>
+        <li><a routerLink="/coin-list" routerLinkActive="active">Criptomoedas</a></li>
+        <ng-container *ngIf="isLoggedIn; else loggedIn">
+          <li><a routerLink="/login" routerLinkActive="active">Login</a></li>
+        </ng-container>
+        <ng-template #loggedIn>
+          <li><a routerLink="/portfolio" routerLinkActive="active">Portfólio</a></li>
+          <li class="user-menu">
+            <span class="user-name">{{ userName }}</span>
+            <button class="logout-btn" (click)="logout()">Sair</button>
+          </li>
+        </ng-template>
+      </ul>
+    </nav>
+  </div>
+</header>

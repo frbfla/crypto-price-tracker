@@ -1,0 +1,87 @@
+<svg width="500" height="300" viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#11cdef" />
+      <stop offset="100%" stop-color="#1171ef" />
+    </linearGradient>
+    <linearGradient id="coinGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFD700" />
+      <stop offset="100%" stop-color="#FFA500" />
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  
+  <!-- Abstract background shapes -->
+  <rect x="0" y="0" width="500" height="300" fill="url(#bgGradient)" />
+  
+  <!-- Grid pattern -->
+  <g opacity="0.1">
+    <path d="M0,30 L500,30" stroke="white" stroke-width="1" />
+    <path d="M0,60 L500,60" stroke="white" stroke-width="1" />
+    <path d="M0,90 L500,90" stroke="white" stroke-width="1" />
+    <path d="M0,120 L500,120" stroke="white" stroke-width="1" />
+    <path d="M0,150 L500,150" stroke="white" stroke-width="1" />
+    <path d="M0,180 L500,180" stroke="white" stroke-width="1" />
+    <path d="M0,210 L500,210" stroke="white" stroke-width="1" />
+    <path d="M0,240 L500,240" stroke="white" stroke-width="1" />
+    <path d="M0,270 L500,270" stroke="white" stroke-width="1" />
+    <path d="M30,0 L30,300" stroke="white" stroke-width="1" />
+    <path d="M60,0 L60,300" stroke="white" stroke-width="1" />
+    <path d="M90,0 L90,300" stroke="white" stroke-width="1" />
+    <path d="M120,0 L120,300" stroke="white" stroke-width="1" />
+    <path d="M150,0 L150,300" stroke="white" stroke-width="1" />
+    <path d="M180,0 L180,300" stroke="white" stroke-width="1" />
+    <path d="M210,0 L210,300" stroke="white" stroke-width="1" />
+    <path d="M240,0 L240,300" stroke="white" stroke-width="1" />
+    <path d="M270,0 L270,300" stroke="white" stroke-width="1" />
+    <path d="M300,0 L300,300" stroke="white" stroke-width="1" />
+    <path d="M330,0 L330,300" stroke="white" stroke-width="1" />
+    <path d="M360,0 L360,300" stroke="white" stroke-width="1" />
+    <path d="M390,0 L390,300" stroke="white" stroke-width="1" />
+    <path d="M420,0 L420,300" stroke="white" stroke-width="1" />
+    <path d="M450,0 L450,300" stroke="white" stroke-width="1" />
+    <path d="M480,0 L480,300" stroke="white" stroke-width="1" />
+  </g>
+  
+  <!-- Floating cryptocurrency coins -->
+  <!-- Bitcoin -->
+  <g transform="translate(350, 150)" filter="url(#glow)">
+    <circle cx="0" cy="0" r="40" fill="url(#coinGradient)" />
+    <text x="0" y="0" font-family="Arial" font-size="40" font-weight="bold" text-anchor="middle" dominant-baseline="central" fill="white">₿</text>
+  </g>
+  
+  <!-- Ethereum -->
+  <g transform="translate(100, 80)" filter="url(#glow)">
+    <circle cx="0" cy="0" r="30" fill="#627EEA" />
+    <text x="0" y="0" font-family="Arial" font-size="30" font-weight="bold" text-anchor="middle" dominant-baseline="central" fill="white">Ξ</text>
+  </g>
+  
+  <!-- Litecoin -->
+  <g transform="translate(150, 220)" filter="url(#glow)">
+    <circle cx="0" cy="0" r="25" fill="#345D9D" />
+    <text x="0" y="0" font-family="Arial" font-size="25" font-weight="bold" text-anchor="middle" dominant-baseline="central" fill="white">Ł</text>
+  </g>
+  
+  <!-- Ripple -->
+  <g transform="translate(400, 70)" filter="url(#glow)">
+    <circle cx="0" cy="0" r="20" fill="#23292F" />
+    <text x="0" y="0" font-family="Arial" font-size="20" font-weight="bold" text-anchor="middle" dominant-baseline="central" fill="white">X</text>
+  </g>
+  
+  <!-- Abstract lines connecting coins -->
+  <path d="M100,80 L150,220 L350,150 L400,70 Z" stroke="white" stroke-width="2" fill="none" opacity="0.3" />
+  
+  <!-- Animated price chart line -->
+  <path d="M50,200 Q100,150 150,180 T250,120 T350,150 T450,100" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" />
+  
+  <!-- Small dots on the chart line -->
+  <circle cx="50" cy="200" r="4" fill="white" />
+  <circle cx="150" cy="180" r="4" fill="white" />
+  <circle cx="250" cy="120" r="4" fill="white" />
+  <circle cx="350" cy="150" r="4" fill="white" />
+  <circle cx="450" cy="100" r="4" fill="white" />
+</svg>

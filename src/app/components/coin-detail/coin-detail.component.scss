@@ -1,0 +1,389 @@
+.coin-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+
+  // Loading state
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem 0;
+
+    .loader {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  }
+
+  // Error state
+  .error-container {
+    text-align: center;
+    padding: 2rem 0;
+
+    p {
+      color: var(--danger-color);
+      margin-bottom: 1rem;
+    }
+
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: darken(#11cdef, 10%);
+      }
+    }
+  }
+
+  // Coin details
+  .coin-details {
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      background: none;
+      border: none;
+      color: var(--secondary-color);
+      font-size: 1rem;
+      padding: 0.5rem 0;
+      margin-bottom: 1.5rem;
+      cursor: pointer;
+      transition: color 0.2s ease;
+
+      span {
+        margin-right: 0.5rem;
+        font-size: 1.2rem;
+      }
+
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+
+    // Coin header
+    .coin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #e0e0e0;
+
+      .coin-basic-info {
+        display: flex;
+        align-items: center;
+
+        .coin-logo {
+          width: 60px;
+          height: 60px;
+          margin-right: 1rem;
+        }
+
+        .coin-name-info {
+          h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+
+            .coin-symbol {
+              font-size: 1.2rem;
+              color: #666;
+              margin-left: 0.5rem;
+            }
+          }
+
+          .coin-rank {
+            .rank-label {
+              background-color: #f0f0f0;
+              padding: 0.25rem 0.75rem;
+              border-radius: 20px;
+              font-size: 0.9rem;
+              font-weight: 500;
+            }
+          }
+        }
+      }
+
+      .coin-price-info {
+        text-align: right;
+
+        .current-price {
+          h2 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+          }
+
+          span {
+            font-size: 1.1rem;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+
+    // Chart section
+    .chart-section {
+      background-color: var(--card-background);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--box-shadow);
+
+      .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+
+        h3 {
+          font-size: 1.5rem;
+          color: var(--secondary-color);
+        }
+
+        .timeframe-selector {
+          display: flex;
+          gap: 0.5rem;
+
+          button {
+            background-color: #f0f0f0;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+
+            &:hover {
+              background-color: #e0e0e0;
+            }
+
+            &.active {
+              background-color: var(--primary-color);
+              color: white;
+            }
+          }
+        }
+      }
+
+      .chart-container {
+        height: 300px;
+
+        .chart-placeholder {
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          background-color: #f9f9f9;
+          border-radius: var(--border-radius);
+
+          p {
+            margin-bottom: 2rem;
+            color: #666;
+          }
+
+          .placeholder-chart {
+            width: 80%;
+            height: 150px;
+            position: relative;
+            overflow: hidden;
+
+            .chart-line {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, var(--chart-color) 50%, var(--chart-color) 100%);
+              mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0,50 Q20,40 40,60 T80,40 T100,50' stroke='black' fill='none' stroke-width='2'/%3E%3C/svg%3E") 0 0/100% 100%;
+              -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0,50 Q20,40 40,60 T80,40 T100,50' stroke='black' fill='none' stroke-width='2'/%3E%3C/svg%3E") 0 0/100% 100%;
+            }
+          }
+        }
+      }
+    }
+
+    // Market data section
+    .market-data-section {
+      background-color: var(--card-background);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--box-shadow);
+
+      h3 {
+        font-size: 1.5rem;
+        color: var(--secondary-color);
+        margin-bottom: 1.5rem;
+      }
+
+      .market-data-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+
+        .market-data-item {
+          display: flex;
+          flex-direction: column;
+
+          .data-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+          }
+
+          .data-value {
+            font-size: 1.2rem;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+
+    // Description section
+    .description-section {
+      background-color: var(--card-background);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--box-shadow);
+
+      h3 {
+        font-size: 1.5rem;
+        color: var(--secondary-color);
+        margin-bottom: 1.5rem;
+      }
+
+      .description-content {
+        line-height: 1.6;
+        color: #333;
+
+        a {
+          color: var(--primary-color);
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+
+    // Links section
+    .links-section {
+      background-color: var(--card-background);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      box-shadow: var(--box-shadow);
+
+      h3 {
+        font-size: 1.5rem;
+        color: var(--secondary-color);
+        margin-bottom: 1.5rem;
+      }
+
+      .links-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+
+        .link-item {
+          display: flex;
+          align-items: center;
+          padding: 1rem;
+          background-color: #f9f9f9;
+          border-radius: var(--border-radius);
+          text-decoration: none;
+          color: #333;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+          }
+
+          .link-icon {
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+          }
+
+          .link-text {
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Utility classes
+.positive-change {
+  color: var(--success-color);
+}
+
+.negative-change {
+  color: var(--danger-color);
+}
+
+// Responsive styles
+@media (max-width: 992px) {
+  .coin-detail-container {
+    .coin-details {
+      .coin-header {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .coin-price-info {
+          text-align: left;
+          margin-top: 1.5rem;
+        }
+      }
+
+      .market-data-section .market-data-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .links-section .links-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .coin-detail-container {
+    .coin-details {
+      .chart-section .chart-header {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .timeframe-selector {
+          margin-top: 1rem;
+        }
+      }
+
+      .market-data-section .market-data-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .links-section .links-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+}

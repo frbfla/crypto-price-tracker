@@ -1,0 +1,139 @@
+<div class="add-portfolio-container">
+  <div class="form-header">
+    <button class="back-btn" (click)="goBack()" type="button">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      Voltar
+    </button>
+    <h1>Adicionar Item ao Portfólio</h1>
+    <p>Preencha os dados da sua nova criptomoeda</p>
+  </div>
+
+  <div class="form-container">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-container">
+      <div class="loader"></div>
+      <p>Adicionando item ao portfólio...</p>
+    </div>
+
+    <!-- Success State -->
+    <div *ngIf="success" class="success-container">
+      <div class="success-icon">
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22,4 12,14.01 9,11.01"/>
+        </svg>
+      </div>
+      <h2>Item Adicionado com Sucesso!</h2>
+      <p>Redirecionando para o portfólio...</p>
+    </div>
+
+    <!-- Form -->
+    <form *ngIf="!loading && !success" [formGroup]="portfolioForm" (ngSubmit)="onSubmit()" class="portfolio-form">
+      <!-- Error Message -->
+      <div *ngIf="error" class="error-message">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="15" y1="9" x2="9" y2="15"/>
+          <line x1="9" y1="9" x2="15" y2="15"/>
+        </svg>
+        {{ error }}
+      </div>
+
+      <div class="form-grid">
+        <!-- Nome da Criptomoeda -->
+        <div class="form-group">
+          <label for="name">Nome da Criptomoeda *</label>
+          <input
+            type="text"
+            id="name"
+            formControlName="name"
+            placeholder="Ex: Bitcoin"
+            [class.error]="getFieldError('name')"
+          >
+          <div *ngIf="getFieldError('name')" class="field-error">
+            {{ getFieldError('name') }}
+          </div>
+        </div>
+
+        <!-- Símbolo -->
+        <div class="form-group">
+          <label for="symbol">Símbolo *</label>
+          <input
+            type="text"
+            id="symbol"
+            formControlName="symbol"
+            placeholder="Ex: BTC"
+            [class.error]="getFieldError('symbol')"
+            style="text-transform: uppercase;"
+          >
+          <div *ngIf="getFieldError('symbol')" class="field-error">
+            {{ getFieldError('symbol') }}
+          </div>
+        </div>
+
+        <!-- Quantidade -->
+        <div class="form-group">
+          <label for="quantity">Quantidade *</label>
+          <input
+            type="number"
+            id="quantity"
+            formControlName="quantity"
+            placeholder="Ex: 0.5"
+            step="0.00000001"
+            min="0.00000001"
+            [class.error]="getFieldError('quantity')"
+          >
+          <div *ngIf="getFieldError('quantity')" class="field-error">
+            {{ getFieldError('quantity') }}
+          </div>
+        </div>
+
+        <!-- Preço de Compra -->
+        <div class="form-group">
+          <label for="purchasePrice">Preço de Compra (USD) *</label>
+          <input
+            type="number"
+            id="purchasePrice"
+            formControlName="purchasePrice"
+            placeholder="Ex: 45000.00"
+            step="0.01"
+            min="0.01"
+            [class.error]="getFieldError('purchasePrice')"
+          >
+          <div *ngIf="getFieldError('purchasePrice')" class="field-error">
+            {{ getFieldError('purchasePrice') }}
+          </div>
+        </div>
+
+        <!-- Valor Total (Calculado) -->
+        <div class="form-group full-width">
+          <label for="totalValue">Valor Total Investido (USD)</label>
+          <input
+            type="text"
+            id="totalValue"
+            formControlName="totalValue"
+            readonly
+            class="calculated-field"
+            placeholder="Será calculado automaticamente"
+          >
+          <small class="field-help">Este valor é calculado automaticamente (Quantidade × Preço de Compra)</small>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" (click)="goBack()">
+          Cancelar
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="portfolioForm.invalid">
+          <svg *ngIf="!loading" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+          </svg>
+          Adicionar ao Portfólio
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

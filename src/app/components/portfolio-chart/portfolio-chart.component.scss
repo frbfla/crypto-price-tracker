@@ -1,0 +1,26 @@
+.chart-container {
+  position: relative;
+  height: 400px;
+  width: 100%;
+  margin: 20px 0;
+  padding: 20px;
+  background: var(--card-background);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+@media (max-width: 768px) {
+  .chart-container {
+    height: 300px;
+    padding: 15px;
+    margin: 15px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .chart-container {
+    height: 250px;
+    padding: 10px;
+    margin: 10px 0;
+  }
+}

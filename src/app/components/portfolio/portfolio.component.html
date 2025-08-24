@@ -1,0 +1,135 @@
+<div class="portfolio-container">
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loader"></div>
+    <p>Carregando seu portfólio...</p>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="error && !loading" class="error-container">
+    <p>Erro ao carregar o portfólio</p>
+    <button (click)="retry()">Tentar novamente</button>
+  </div>
+
+  <!-- Portfolio content -->
+  <div *ngIf="!loading && !error" class="portfolio-content">
+    <!-- Portfolio Header -->
+    <div class="portfolio-header">
+      <div class="header-content">
+        <div class="header-text">
+          <h1>Meu Portfólio</h1>
+          <p>Acompanhe seus investimentos em criptomoedas</p>
+        </div>
+        <button class="add-item-btn" routerLink="/portfolio/add">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Adicionar Item
+        </button>
+      </div>
+    </div>
+
+    <!-- Portfolio Summary -->
+    <section class="portfolio-summary">
+      <div class="summary-cards">
+        <div class="summary-card">
+          <div class="card-header">
+            <h3>Valor Total</h3>
+          </div>
+          <div class="card-value">
+            <span class="value">{{ formatCurrency(portfolioSummary.totalValue) }}</span>
+          </div>
+        </div>
+        
+        <div class="summary-card">
+          <div class="card-header">
+            <h3>Investido</h3>
+          </div>
+          <div class="card-value">
+            <span class="value">{{ formatCurrency(portfolioSummary.totalInvested) }}</span>
+          </div>
+        </div>
+        
+        <div class="summary-card">
+          <div class="card-header">
+            <h3>Lucro/Prejuízo</h3>
+          </div>
+          <div class="card-value">
+            <span class="value" [class.positive-change]="portfolioSummary.totalProfitLoss >= 0" [class.negative-change]="portfolioSummary.totalProfitLoss < 0">
+              {{ formatCurrency(portfolioSummary.totalProfitLoss) }}
+            </span>
+            <span class="percentage" [class.positive-change]="portfolioSummary.totalProfitLossPercentage >= 0" [class.negative-change]="portfolioSummary.totalProfitLossPercentage < 0">
+              {{ formatPercentage(portfolioSummary.totalProfitLossPercentage) }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Portfolio Chart -->
+    <section class="portfolio-chart-section">
+      <div class="section-header">
+        <h2>Distribuição do Portfólio</h2>
+        <p>Visualização das suas criptomoedas por porcentagem</p>
+      </div>
+      <app-portfolio-chart [portfolioData]="portfolio"></app-portfolio-chart>
+    </section>
+
+    <!-- Portfolio Holdings -->
+    <section class="portfolio-holdings">
+      <div class="section-header">
+        <h2>Suas Criptomoedas</h2>
+        <p>{{ portfolio.length }} ativos em carteira</p>
+      </div>
+
+      <div class="holdings-table-container">
+        <table class="holdings-table">
+          <thead>
+            <tr>
+              <th>Ativo</th>
+              <th>Quantidade</th>
+              <th>Preço Médio</th>
+              <th>Preço Atual</th>
+              <th>Valor Total</th>
+              <th>Lucro/Prejuízo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of portfolio" class="holding-row">
+              <td class="asset-info">
+                <img [src]="item.image" [alt]="item.name" class="asset-logo">
+                <div class="asset-details">
+                  <span class="asset-name">{{ item.name }}</span>
+                  <span class="asset-symbol">{{ item.symbol }}</span>
+                </div>
+              </td>
+              <td class="quantity">
+                <span>{{ formatNumber(item.quantity, item.quantity < 1 ? 8 : 2) }}</span>
+              </td>
+              <td class="average-price">
+                <span>{{ formatCurrency(item.averagePrice) }}</span>
+              </td>
+              <td class="current-price">
+                <span>{{ formatCurrency(item.currentPrice) }}</span>
+              </td>
+              <td class="total-value">
+                <span>{{ formatCurrency(item.totalValue) }}</span>
+              </td>
+              <td class="profit-loss">
+                <div class="profit-loss-container">
+                  <span class="profit-loss-value" [class.positive-change]="item.profitLoss >= 0" [class.negative-change]="item.profitLoss < 0">
+                    {{ formatCurrency(item.profitLoss) }}
+                  </span>
+                  <span class="profit-loss-percentage" [class.positive-change]="item.profitLossPercentage >= 0" [class.negative-change]="item.profitLossPercentage < 0">
+                    {{ formatPercentage(item.profitLossPercentage) }}
+                  </span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</div>
